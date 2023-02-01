@@ -22,10 +22,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Setting up Hashicorp Packer
-      uses: hashicorp-contrib/setup-packer@v1
-      with:
-        packer-version: 1.7.10
 
     -  run: npm run zip
     
