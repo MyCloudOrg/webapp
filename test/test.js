@@ -1,6 +1,6 @@
 const http = require('http');
 const assert = require('assert');
-const app = require('../source/server.js');
+const app = require('../src/server.js');
 
 
 
