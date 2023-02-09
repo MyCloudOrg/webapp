@@ -98,10 +98,10 @@ function validate_Update_Product(req, res, next) {
     res.send({"error":'manufacturer can\'t be empty'});
     return;
   }
-  if(!req.body['quantity']|| !(Number.isInteger(req.body['quantity']) && req.body['quantity'] >= 1)){
+  if(!req.body['quantity']|| !(Number.isInteger(req.body['quantity']) && req.body['quantity'] >= 0)){
     res.status(400);
     res.setHeader('Content-Type', 'application/json');
-    res.send({"error":'quantity can\'t be empty'});
+    res.send({"error":'Enter valid quantity as Integer'});
     return;
   }
   if(req.body['date_added'] ){
