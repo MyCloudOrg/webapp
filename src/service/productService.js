@@ -20,7 +20,7 @@ params.date_added = date_ob;
 params.date_last_updated = date_ob;
 params.owner_user_id = userId;
 
-if (!(Number.isInteger(params.quantity) && params.quantity >= 1)){
+if (!(Number.isInteger(params.quantity) && params.quantity >= 0)){
    throw 'Enter a valid quantity';
 }
 
