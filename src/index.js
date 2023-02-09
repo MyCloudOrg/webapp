@@ -1,6 +1,6 @@
 const server = require("./server.js");
 const CONFIG = require('./config/config');
-console.log("Please here me")
+console.log("Please here me in index.js")
 server.use((err, req, res, next) => {
     console.error(err.stack);
     res.setHeader('Content-Type', 'application/json');

@@ -17,12 +17,14 @@ async function initialize() {
       user: MYSQL_USERNAME,
       password: MYSQL_PASSWORD});
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DATABASE}\`;`);
+    
 
     // connect to db
     const sequelize = new Sequelize(DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD, { dialect: 'mysql' });
 
     // init models and add them to the exported db object
     db.User = require('./model')(sequelize);
+    db.Product = require('./productModel')(sequelize);
     console.log("after assigning")
     // sync all models with database
     await sequelize.sync();

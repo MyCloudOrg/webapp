@@ -15,11 +15,11 @@ function model(sequelize){
     }
   };
   const  attributes={
-    id:{
-      type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
-    },
+    // id:{
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    //   primaryKey: true
+    // },
     username:{
       type: DataTypes.STRING,
       allowNull: false

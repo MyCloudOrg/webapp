@@ -13,6 +13,38 @@ async function auth (req,res,next){
   }
   console.log(dataFromAuth)
   const existingUser = await usersDb.User.findOne({where:{username:dataFromAuth.name}})
+  if(!existingUser){
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    console.log("user not found")
+    res.status(400).send("User not found")
+    return
+  }
+
+
+  if(req.params.pid){
+    const existingProduct = await usersDb.Product.findOne({where:{id:req.params.pid}})
+    if(!existingProduct){
+      res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+      console.log("product not found")
+      // res.sendStatus(400);
+      res.status(400).send("Product not found")
+      // res.message = "Product not found";
+      return
+    }
+    if (req.params.pid && existingUser.id !=existingProduct.owner_user_id ) {
+      res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+      res.sendStatus(403);
+      return
+    }
+  }
+
+  if (req.params.id && existingUser.id !=req.params.id ) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    res.sendStatus(403);
+    return
+  }
+
+  
   console.log(existingUser)
   console.log(existingUser.password)
   console.log(dataFromAuth.pass)
@@ -26,5 +58,6 @@ async function auth (req,res,next){
   console.log(existingUser) 
   req.ctx={};
   req.ctx.user = dataFromAuth;
+  req.ctx.user.id = existingUser.id;
   next()
 }

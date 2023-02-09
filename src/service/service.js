@@ -1,6 +1,6 @@
-const uniqueUserId = require('uuid');
+
 const bcrypt = require('bcryptjs');
-const usersDb = require('../model/db');
+const usersDb = require('../model/db'); 
 
 async function  create_NewUser(user) {
   await usersDb.initialize();
@@ -12,14 +12,13 @@ async function  create_NewUser(user) {
   if (user.password) {
     user.hash = await bcrypt.hash(user.password, 10);
   }
-  user.id = uniqueUserId.v4();
   let dateFormat = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
   user.account_created = dateFormat;
   user.account_updated = dateFormat;
   user.password = user.hash;
   await usersDb.User.create(user);
   const dt = await usersDb.User.findOne({ where: { username: user.username } })
-  let {id,username,first_name,last_name,account_created,account_updated}=dt;
+ let {id,username,first_name,last_name,account_created,account_updated}=dt;
   return {id,username,first_name,last_name,account_created,account_updated};
 }
 

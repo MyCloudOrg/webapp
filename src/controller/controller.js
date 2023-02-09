@@ -5,8 +5,8 @@ const auth = require('../security/auth.js')
 const user_Service = require('../service/service');
 const {validate_Create_User,validate_Update_User} = require('../security/validation');
 console.log("Please here me controller")
-router.get('/self',auth,findUserDetails)
-router.put('/self',auth,validate_Update_User,update_UserDetails);
+router.get('/:id',auth,findUserDetails)
+router.put('/:id',auth,validate_Update_User,update_UserDetails);
 router.post('/',validate_Create_User,create_NewUser);
 module.exports = router;
 
@@ -23,7 +23,7 @@ function update_UserDetails(req,res,next){
 }
 
 function create_NewUser(req,res,next){
-    user_Service.create_NewUser(req.body)
+    user_Service.create_NewUser(req.body,res)
   .then(data => {res.status(201);res.json(data)})
-  .catch(data => {console.log(data);res.sendStatus(400);next()});
+  .catch(data => {console.log(data); res.status(400).send("User already exists");next()});
 }
