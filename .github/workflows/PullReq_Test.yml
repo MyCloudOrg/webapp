@@ -19,3 +19,5 @@ jobs:
       - run: npm --version
       - run: npm ci
       - run: npm test
+      - run: packer init custom-ami.pkr.hcl
+      - run: packer validate custom-ami.pkr.hcl

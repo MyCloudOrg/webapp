@@ -1,0 +1,13 @@
+[Unit]
+Description=nodeapp
+After=network.target
+
+[Service]
+Environment=NODE_PORT=3030
+Type=simple
+User=ec2-user
+ExecStart=/usr/bin/node /home/ec2-user/webapp/src/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

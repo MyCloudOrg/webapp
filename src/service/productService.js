@@ -20,7 +20,7 @@ params.date_added = date_ob;
 params.date_last_updated = date_ob;
 params.owner_user_id = userId;
 
-if (!(Number.isInteger(params.quantity) && params.quantity >= 0)){
+if (!(Number.isInteger(params.quantity) && params.quantity >= 0 && params.quantity <= 100)){
    throw 'Enter a valid quantity';
 }
 
@@ -43,7 +43,7 @@ async function update_ProductDetails(req,res){
         throw 'You are forbidden to update this product';
     }
 
-    if (!(Number.isInteger(updateProduct.quantity) && updateProduct.quantity >= 0)){
+    if (!(Number.isInteger(updateProduct.quantity) && updateProduct.quantity >= 0 && updateProduct.quantity <= 100)){
         throw 'Enter a valid quantity';
     }
     
@@ -51,6 +51,7 @@ async function update_ProductDetails(req,res){
 
     if(new_data.dataValues.sku != updateProduct.sku){
     if (await db.Product.findOne({ where: { sku: updateProduct.sku } })) {
+        
         throw 'SKU "' + updateProduct.sku + '" already exists, please enter a different SKU';
     }
     }
@@ -89,7 +90,7 @@ async function patch(productId, params, req, res) {
         throw 'You are forbidden to update this product';
     }
     if (req.body.hasOwnProperty('quantity')){
-    if (!(Number.isInteger(params.quantity) && params.quantity >= 0)){
+    if (!(Number.isInteger(params.quantity) && params.quantity >= 0 && params.quantity <= 100)){
        
         res.status(400).send("Enter a valid quantity");
         throw 'Enter a valid quantity';
