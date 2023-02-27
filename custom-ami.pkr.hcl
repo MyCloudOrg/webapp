@@ -22,7 +22,7 @@ variable "aws_region" {
 variable "source_ami" {
   default = "ami-0dfcb1ef8550277af"
 }
-variable "instance_type" }
+variable "instance_type" {
   default = "t2.micro"
 }
 variable "ssh_username" {
