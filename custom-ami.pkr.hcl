@@ -90,7 +90,6 @@ build {
 
   provisioner "shell" {
     inline = [
-      ""
       "cd /home/ec2-user/webapp",
       "chown ec2-user:ec2-user /home/ec2-user/webapp",
       "sudo npm install",
