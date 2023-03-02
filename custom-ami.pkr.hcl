@@ -78,20 +78,19 @@ build {
       "sudo yum -y install nodejs",
       "node -v",
       "sudo yum -y install mysql",
-      "mkdir /home/ec2-user",
-      // "chown ec2-user:ec2-user /home/ec2-user/webapp"
+      "mkdir /home/ec2-user/webapp",
+      "chown ec2-user:ec2-user /home/ec2-user/webapp"
     ]
   }
 
   provisioner "file" {
-    source      = "webapp.zip"
-    destination = "/home/ec2-user/webapp.zip"
+    source      = "./"
+    destination = "/home/ec2-user/webapp"
   }
 
   provisioner "shell" {
     inline = [
       "cd /home/ec2-user/webapp",
-      "chown ec2-user:ec2-user /home/ec2-user/webapp",
       "sudo npm install",
       "sudo cp /home/ec2-user/webapp/nodeapp.service /lib/systemd/system/nodeapp.service",
       "sudo systemctl daemon-reload",
@@ -101,5 +100,3 @@ build {
   }
 
 }
-
-
