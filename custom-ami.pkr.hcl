@@ -91,7 +91,7 @@ build {
   provisioner "shell" {
     inline = [
       "cd /home/ec2-user/webapp",
-      "chown ec2-user:ec2-user /home/ec2-user/webapp"
+      "chown ec2-user:ec2-user /home/ec2-user/webapp",
       "sudo npm install",
       "sudo cp /home/ec2-user/webapp/nodeapp.service /lib/systemd/system/nodeapp.service",
       "sudo systemctl daemon-reload",
