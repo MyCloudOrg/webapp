@@ -1,12 +1,14 @@
 const bcrypt = require('bcryptjs');
 const db = require('../model/db'); 
+const sss = require('../s3');
 
 module.exports = {
     create_Newproduct,
     update_ProductDetails,
     getProductById,
     patch,
-    deleteProduct
+    deleteProduct,
+    getProduct
 }
 async function  create_Newproduct(params, req, res) {
      console.log("Please here me prod service");
@@ -123,6 +125,25 @@ async function deleteProduct(productId, req) {
         throw 'You cannot delete this product!'
     } else {
     db.Product.destroy({ where: { id: productId } })
+
+   const getAllImages = await db.Image.findAll({
+        attributes: ['image_id', 'product_id', 'file_name', 'date_created', 's3_bucket_path'],
+        where: {
+            product_id: productId
+        }
+    });
+
+    console.log(getAllImages);
+    if( getAllImages.length > 0){
+    for (let i = 0; i < getAllImages.length; i++) {
+        const image = getAllImages[i];
+        const Key = image.s3_bucket_path;
+        console.log(Key);
+        await sss.deleteFile(Key);
+    }
+
+    db.Image.destroy({ where: { product_id: productId } });
+    }
 }
     return product;
 }

@@ -37,10 +37,7 @@ router.patch('*', (req, res) => { res.status(400);
 
 
 app.use('/v1/user', require('./controller/controller'));
-app.use('/v1/product', require('./controller/productController'));
+ app.use('/v1/product', require('./controller/productController'));
+app.use('/v1', require('./controller/imageController'));
 app.use('/', router);
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).send('Unexpected error');
-//})
 module.exports = app;

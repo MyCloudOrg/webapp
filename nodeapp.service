@@ -3,7 +3,7 @@ Description=nodeapp
 After=network.target
 
 [Service]
-Environment=NODE_PORT=3030
+EnvironmentFile=/etc/environment
 Type=simple
 User=ec2-user
 ExecStart=/usr/bin/node /home/ec2-user/webapp/src/index.js
