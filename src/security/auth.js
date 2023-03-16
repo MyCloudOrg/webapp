@@ -13,10 +13,12 @@ async function auth (req,res,next){
   }
   console.log(dataFromAuth)
   const existingUser = await usersDb.User.findOne({where:{username:dataFromAuth.name}})
+
+
   if(!existingUser){
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     console.log("user not found")
-    res.status(404).send("User not found")
+    res.status(401).send("Invalid user or Password")
     return
   }
 

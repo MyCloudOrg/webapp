@@ -33,19 +33,19 @@ variable "profile" {
 
 variable "ami_users" {
   type    = list(string)
-  default=[]
+  default = []
 }
 
 
 source "amazon-ebs" "custom-ami" {
-  profile    = var.profile
-  region     = var.aws_region
+  profile          = var.profile
+  region           = var.aws_region
   ami_name         = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   instance_type    = var.instance_type
   source_ami       = var.source_ami
   ssh_username     = var.ssh_username
   ami_description  = var.ami_description
-  ami_users        =  var.ami_users
+  ami_users        = var.ami_users
   force_deregister = true
   aws_polling {
     delay_seconds = 120
