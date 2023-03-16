@@ -30,8 +30,16 @@ variable "profile" {
   default = "dev"
 }
 
+variable "DEV_USER_ID"{
+  type = string
+
+variable "DEMO_USER_ID"{
+  type = string
+}}
+
 variable "ami_users" {
   type    = list(string)
+  default = [var.DEV_USER_ID, var.DEMO_USER_ID]
 }
 
 

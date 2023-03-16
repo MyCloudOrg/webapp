@@ -26,4 +26,4 @@ jobs:
       run: packer init custom-ami.pkr.hcl
 
     - name: Building Packer Template
-      run: packer build custom-ami.pkr.hcl -var "ami_users=${{[env.DEV_AMI_ID,env.DEMO_AMI_ID]}}"
+      run: packer build custom-ami.pkr.hcl -var "DEV_USER_ID=${{env.DEV_AMI_ID}}" -var "DEMO_USER_ID"=${{env.DEMO_AMI_ID}}"
