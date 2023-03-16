@@ -30,16 +30,11 @@ variable "profile" {
   default = "dev"
 }
 
-variable "DEV_USER_ID"{
-  type = string
-}
-variable "DEMO_USER_ID"{
-  type = string
-}
 
-// variable "ami_users" {
-//   type    = list(string)
-// }
+variable "ami_users" {
+  type    = list(string)
+  default=[]
+}
 
 
 source "amazon-ebs" "custom-ami" {
@@ -50,7 +45,7 @@ source "amazon-ebs" "custom-ami" {
   source_ami       = var.source_ami
   ssh_username     = var.ssh_username
   ami_description  = var.ami_description
-  ami_users        =  [var.DEV_USER_ID, var.DEMO_USER_ID]
+  ami_users        =  var.ami_users
   force_deregister = true
   aws_polling {
     delay_seconds = 120

@@ -5,8 +5,7 @@ env:
   AWS_REGION: us-east-1
   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-  DEV_AMI_ID: ${{secrets.DEV_AMI_ID}}
-  DEMO_AMI_NAME: ${{secrets.DEMO_AMI_NAME}}
+  AWS_AMI_USERS: ${{secrets.AWS_AMI_USERS}}
   
 on:
   push:
@@ -26,4 +25,4 @@ jobs:
       run: packer init custom-ami.pkr.hcl
 
     - name: Building Packer Template
-      run: packer build custom-ami.pkr.hcl -var 'DEV_USER_ID=${{env.DEV_AMI_ID}}' -var 'DEMO_USER_ID=${{env.DEMO_AMI_ID}}'
+      run: packer build  -var 'ami_users = ${{env.AWS_AMI_USERS}}' custom-ami.pkr.hcl
