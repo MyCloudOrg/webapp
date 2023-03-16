@@ -20,6 +20,24 @@ async function auth (req,res,next){
     return
   }
 
+  if(req.params.pid && req.params.image_id){
+    const onlyImage = await usersDb.Image.findOne({where:{image_id:req.params.image_id}})
+
+    const ProductImage = await usersDb.Image.findOne({
+      where: {
+          image_id: req.params.image_id,
+          product_id: req.params.pid
+      }
+  });
+
+  if(onlyImage){
+    if (!ProductImage) {
+        return res.status(403).send("Forbidden");
+    }
+}else{
+    return res.status(404).send("Image not Found");
+}
+  }
 
   if(req.params.pid){
     const existingProduct = await usersDb.Product.findOne({where:{id:req.params.pid}})

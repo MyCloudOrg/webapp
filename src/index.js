@@ -4,7 +4,7 @@ console.log("Please here me in index.js")
 server.use((err, req, res, next) => {
     console.error(err.stack);
     res.setHeader('Content-Type', 'application/json');
-    res.status(500).send({'error':'Unexpected error'});
+    res.status(400).send({'error':'Bad Request'});
   })
   server.listen(CONFIG.SERVER_PORT,()=>{
     console.log("server started at port: ",CONFIG.SERVER_PORT);
