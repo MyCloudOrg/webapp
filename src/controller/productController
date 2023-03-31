@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const logger = require('../Logger/logger')
 
+const client = require('../Logger/statsd');
 const auth = require('../security/auth.js')
 const product_Service = require('../service/productService');
 const {validate_Update_Product,validate_patch_Product} = require('../security/validation');
@@ -12,30 +14,40 @@ router.patch('/:pid', auth,validate_patch_Product, patch);
 router.delete('/:pid', auth, deleteProduct);
 
 function create_Newproduct(req,res,next){
+  logger.info("Creating new Product Details with req: ",req.body)
+  client.increment('PostProduct', 1);
     product_Service.create_Newproduct(req.body,req,res)
   .then(data => {res.status(201);res.json(data)})
-  .catch(data => {console.log(data);res.sendStatus(400);next()});
+  .catch(data => {console.log(data);res.status(400).send("SKU already exists");next()});
 }
 
 function update_ProductDetails(req,res,next){
+  logger.info("Updating Product Details for the productID: ",req.params.pid)
+  client.increment('UpdateProduct', 1);
     product_Service.update_ProductDetails(req,res)
   .then(data => {res.status(204);res.json(data)})
   .catch(data => {console.log(data);res.sendStatus(400);next()});
 }
 
 function getProductById(req, res, next) {
+  logger.info("Getting Product Details with req: ",req.params.pid)
+  client.increment('GetProduct', 1);
     product_Service.getProductById(req.params.pid)
         .then(product => res.json(product))
         .catch(product=> {res.status(404).send("Product is not present in the database");next()});
 }
 
 function patch(req, res, next) {
+  logger.info("Patch Product Details for produtc id :  ",req.params.pid,"req: ",req.body)
+  client.increment('PatchProduct', 1);
     product_Service.patch(req.params.pid, req.body,req,res)
         .then(product => res.status(204).json(product))
         .catch(data => {console.log(data);res.status(400).send("SKU already exists");next()});
 }
 
 function deleteProduct(req, res, next) {
+  logger.info("Delete Product Details with req: ",req)
+  client.increment('DeleteProduct', 1);
     product_Service.deleteProduct(req.params.pid, req, req.body)
         .then(product => res.status(204).json(product))
         .catch(next);

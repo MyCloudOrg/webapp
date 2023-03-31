@@ -3,12 +3,13 @@
   "description": "",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node_modules/nodemon/bin/nodemon.js --trace-warnings source/main.js > logs.txt",
+    "dev": "node_modules/nodemon/bin/nodemon.js --trace-warnings src/index.js > logs.txt",
     "test": "node_modules/mocha/bin/mocha test/test.js",
     "start": "node src/index.js",
     "zip": "sh createzip.sh"
   },
   "dependencies": {
+    "app-root-path": "^3.1.0",
     "aws-sdk": "^2.1324.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
@@ -22,8 +23,10 @@
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "node-statsd": "^0.1.1",
     "sequelize": "^6.17.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

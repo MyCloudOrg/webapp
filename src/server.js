@@ -3,8 +3,6 @@ const app = express();
 app.use(express.json());
 const router = express.Router();
 
-
-
 router.get('/healthz', (req, res) => {
     console.log('inside get request');
     res.send({"Success":'Connected to server'});

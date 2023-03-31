@@ -1,5 +1,6 @@
 const dbconfig = require('../config/config');
 const mysql = require('mysql2/promise');
+const logger = require('../Logger/logger')
 const { Sequelize } = require('sequelize');
 module.exports = db= {};
 let isInitialized= false;
@@ -10,6 +11,7 @@ async function initialize() {
     return;
   }
   console.log("inside initializing")
+  logger.info("Inside Initiailizing siva 1st logger")
     // create db if it doesn't already exist
     const { DB_PORT,HOST, SERVER_PORT, MYSQL_USERNAME, MYSQL_PASSWORD, DATABASE } = dbconfig;
 

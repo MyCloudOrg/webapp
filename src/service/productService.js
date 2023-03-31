@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const { log } = require('winston');
+const logger = require('../Logger/logger');
 const db = require('../model/db'); 
 const sss = require('../s3');
 
@@ -13,6 +15,8 @@ module.exports = {
 async function  create_Newproduct(params, req, res) {
      console.log("Please here me prod service");
     if (await db.Product.findOne({ where: { sku: params.sku } })) {
+        logger.info(params.sku)
+        logger.error("SKU already exists");
         throw 'SKU "' + params.sku + '" already exists, please enter a different SKU';
     }
 
@@ -23,6 +27,7 @@ params.date_last_updated = date_ob;
 params.owner_user_id = userId;
 
 if (!(Number.isInteger(params.quantity) && params.quantity >= 0 && params.quantity <= 100)){
+    logger.error("Enter a valid quantity");
    throw 'Enter a valid quantity';
 }
 
@@ -41,11 +46,13 @@ async function update_ProductDetails(req,res){
     updateProduct.date_last_updated = date_ob
      const userId = req.ctx.user.id;
     if(userId != product.dataValues.owner_user_id){
+        logger.error('You are forbidden to update this product')
         res.sendStatus(403);
         throw 'You are forbidden to update this product';
     }
 
     if (!(Number.isInteger(updateProduct.quantity) && updateProduct.quantity >= 0 && updateProduct.quantity <= 100)){
+        logger.info('Enter a valid quantity')
         throw 'Enter a valid quantity';
     }
     
@@ -53,7 +60,7 @@ async function update_ProductDetails(req,res){
 
     if(new_data.dataValues.sku != updateProduct.sku){
     if (await db.Product.findOne({ where: { sku: updateProduct.sku } })) {
-        
+        logger.error('SKU',updateProduct.sku,'already exists, please enter a different SKU')
         throw 'SKU "' + updateProduct.sku + '" already exists, please enter a different SKU';
     }
     }
@@ -70,6 +77,7 @@ async function update_ProductDetails(req,res){
 async function getProductById(pid) {
    const product = await getProduct(pid);
    if(!product){ 
+    logger.error('Product not found')
     throw 'Product is not present in the database';
    }
     let {id,name,description,sku,manufacturer,quantity,date_added,date_last_updated,owner_user_id} = product;
@@ -88,12 +96,13 @@ async function patch(productId, params, req, res) {
      params.date_last_updated = date_ob
      const userId = req.ctx.user.id;
     if(userId != product.dataValues.owner_user_id){
+        logger.error('You are forbidden to update this product')
         res.sendStatus(403);                                
         throw 'You are forbidden to update this product';
     }
     if (req.body.hasOwnProperty('quantity')){
     if (!(Number.isInteger(params.quantity) && params.quantity >= 0 && params.quantity <= 100)){
-       
+       logger.error('Enter a valid quantity')
         res.status(400).send("Enter a valid quantity");
         throw 'Enter a valid quantity';
     }
@@ -104,6 +113,7 @@ async function patch(productId, params, req, res) {
     // console.log(new_data.dataValues.sku);
     if(new_data.dataValues.sku != params.sku){
     if (await db.Product.findOne({ where: { sku: params.sku } })) {
+        logger.error('SKU',params.sku,'already exists, please enter a different SKU')
         throw 'SKU "' + params.sku + '" already exists, please enter a different SKU';
     }
 }
@@ -118,10 +128,13 @@ async function patch(productId, params, req, res) {
 
 async function deleteProduct(productId, req) {
     const product = await db.Product.findByPk(productId);
-    if (!product) throw 'Product is not present in the database';
-
+    if (!product){ 
+        logger.error('Product not found')
+        throw 'Product is not present in the database';
+    }
     const userId = req.ctx.user.id;
     if(userId != product.dataValues.owner_user_id){
+        logger.error('forbidenn You cannot delete this product')
         throw 'You cannot delete this product!'
     } else {
     db.Product.destroy({ where: { id: productId } })
@@ -132,7 +145,7 @@ async function deleteProduct(productId, req) {
             product_id: productId
         }
     });
-
+    logger.info(getAllImages)
     console.log(getAllImages);
     if( getAllImages.length > 0){
     for (let i = 0; i < getAllImages.length; i++) {
@@ -151,7 +164,9 @@ async function deleteProduct(productId, req) {
 
 async function getProduct(productId) {
     const product = await db.Product.findByPk(productId);
-    if (!product) throw 'Product is not present in the database';
+    if (!product){ 
+        logger.error('Product not found')
+        throw 'Product is not present in the database';}
     return product;
    }
 

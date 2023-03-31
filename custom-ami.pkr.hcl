@@ -79,6 +79,7 @@ build {
       "sudo yum -y install nodejs",
       "node -v",
       "sudo yum -y install mysql",
+      "sudo yum -y install amazon-cloudwatch-agent",
       "mkdir /home/ec2-user/webapp",
       "chown ec2-user:ec2-user /home/ec2-user/webapp"
     ]
@@ -89,8 +90,14 @@ build {
     destination = "/home/ec2-user/webapp"
   }
 
+  provisioner "file" {
+    source      = "./cloudwatch-config.json"
+    destination = "/tmp/amazon-cloudwatch-agent.json"
+  }
+
   provisioner "shell" {
     inline = [
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/tmp/amazon-cloudwatch-agent.json -s",
       "cd /home/ec2-user/webapp",
       "sudo npm install",
       "sudo cp /home/ec2-user/webapp/nodeapp.service /lib/systemd/system/nodeapp.service",

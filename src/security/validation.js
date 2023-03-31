@@ -101,6 +101,7 @@ function validate_Update_Product(req, res, next) {
   if(req.body['quantity'] &&  !(Number.isInteger(req.body['quantity']) && req.body['quantity'] >= 0 && req.body['quantity'] <= 100)){
     res.status(400);
     res.setHeader('Content-Type', 'application/json');
+    
     res.send({"error":'Enter valid quantity'});
     return;
   }

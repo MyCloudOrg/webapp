@@ -1,11 +1,13 @@
 
 const bcrypt = require('bcryptjs');
+const logger = require('../Logger/logger');
 const usersDb = require('../model/db'); 
 
 async function  create_NewUser(user) {
   await usersDb.initialize();
   const userDataFound = await usersDb.User.findOne({ where: { username: user.username } })
   if (userDataFound) {
+    logger.info(user.username, " already exists");
     throw user.username + " already exists";
     return;
   }
@@ -26,6 +28,7 @@ async function updateUser(data,user){
   console.log('inside update user')
   let userDataFound = await usersDb.User.findOne({ where: { username: user.name } })
   if (!userDataFound) {
+    logger.error(user.username, " doesn't exists");
     throw user.username + " doesn't exists";
     return;
   }
@@ -60,6 +63,7 @@ async function findUserDetails({username}){
   const data = await usersDb.User.findOne({ where: { username: username } });
   const {id,first_name,last_name,account_created,account_updated} = data.dataValues;
   console.log({id,username,first_name,last_name,account_created,account_updated});
+  logger.info("Getting User Details with req: ",{id,username,first_name,last_name,account_created,account_updated});
   return {id,username,first_name,last_name,account_created,account_updated}
 
 }

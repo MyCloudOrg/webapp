@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const logger = require('../Logger/logger')
 const auth = require('../security/auth.js')
 const imageService = require('../service/imageService');
 const multer = require('multer');
 
+const client = require('../Logger/statsd');
 // Configure multer
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -29,28 +31,35 @@ router.delete('/product/:pid/image/:image_id', auth, deleteImage);
 
 
 function uploadNewImage(req, res, next) {
+  logger.info("Uploading new image Details with req: ",req)
+  client.increment('PostImage', 1);
     imageService.createImage(req, res)
         .then(data => { res.status(201); res.json(data) })
-        .catch(data => { console.log(data); res.sendStatus(400); next() });
+        .catch(data => { logger.info(data); res.sendStatus(400); next() });
 }
 
 function getImageById(req, res, next) {
+  logger.info("Getting  image Details for the product :  with Image id : ",req.params.image_id,req.params.image_id)
+  client.increment('GetImage', 1);
     imageService.getImageById(req, res)
         .then(data => { res.status(200); res.json(data) })
-        .catch(data => { console.log(data); next() });
+        .catch(data => { logger.info(data); next() });
 }
 
-
 function getAllImages(req, res, next) {
+  logger.info("Getting  image Details for req: ",req)
+  client.increment('GetAllImages', 1);
     imageService.getAllImages(req, res)
         .then(data => { res.status(200); res.json(data) })
-        .catch(data => { console.log(data); res.sendStatus(404); next() });
+        .catch(data => { logger.info(data); res.sendStatus(404); next() });
 }
 
 function deleteImage(req, res, next) {
+  logger.info("Deleting image: ",req.params.image_id)
+  client.increment('DeleteImage', 1);
     imageService.deleteImage(req, res)
         .then(data => { res.status(204); res.json(data) })
-        .catch(data => { console.log(data); next() });
+        .catch(data => { logger.info(data); next() });
 }
 
 module.exports = router;

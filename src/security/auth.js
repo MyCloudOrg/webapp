@@ -1,9 +1,10 @@
 // const userService = require('../service/service');
 const usersDb = require('../model/db');
 const basic_Auth = require('basic-auth');
+const logger = require('../Logger/logger');
 const bcrypt = require('bcryptjs');
 module.exports = auth;
-console.log("inside auth");
+logger.info("inside auth");
 async function auth (req,res,next){
   const dataFromAuth = basic_Auth(req);
   if (!dataFromAuth || !dataFromAuth.name || !dataFromAuth.pass) {
@@ -11,13 +12,13 @@ async function auth (req,res,next){
     res.sendStatus(401);
     return;
   }
-  console.log(dataFromAuth)
+  logger.info(dataFromAuth.name)
   const existingUser = await usersDb.User.findOne({where:{username:dataFromAuth.name}})
 
 
   if(!existingUser){
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    console.log("user not found")
+    logger.info("user not found :",dataFromAuth.name)
     res.status(401).send("Invalid user or Password")
     return
   }
@@ -45,7 +46,7 @@ async function auth (req,res,next){
     const existingProduct = await usersDb.Product.findOne({where:{id:req.params.pid}})
     if(!existingProduct){
       res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-      console.log("product not found")
+      logger.info("product not found")
       // res.sendStatus(400);
       res.status(404).send("Product not found")
       // res.message = "Product not found";
@@ -65,17 +66,17 @@ async function auth (req,res,next){
   }
 
   
-  console.log(existingUser)
-  console.log(existingUser.password)
-  console.log(dataFromAuth.pass)
+  logger.info(existingUser)
+  logger.info(existingUser.password)
+  logger.info(dataFromAuth.pass)
   if (!(await bcrypt.compare(dataFromAuth.pass, existingUser.password)))
   {
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     res.sendStatus(401);
     return
   }
-  console.log("authentication user details")
-  console.log(existingUser) 
+  logger.info("authentication user details")
+  logger.info(existingUser) 
   req.ctx={};
   req.ctx.user = dataFromAuth;
   req.ctx.user.id = existingUser.id;
