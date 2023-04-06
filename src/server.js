@@ -6,7 +6,7 @@ const client = require('./Logger/statsd');
 
 router.get('/healthz', (req, res) => {
     console.log('inside get request');
-    client.increment('healthz', 1);
+    client.increment('healthz');
     res.send({"Success":'Connected to server'});
 });
 

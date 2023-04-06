@@ -11,9 +11,12 @@ describe('WebApp test', function() {
 		server = app.listen(port);
 	});
 
-	after(function() {
+	after(function(done) {
 		server.close();
-	});
+		setTimeout(() => {
+		  process.exit(0);
+		}, 1000); // wait for 1 second to allow other asynchronous code to finish
+	  });
 
 	describe('/', function() {
 		it('should be Status running', function(done) {
