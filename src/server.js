@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const router = express.Router();
+const client = require('./Logger/statsd');
 
 router.get('/healthz', (req, res) => {
     console.log('inside get request');
+    client.increment('healthz', 1);
     res.send({"Success":'Connected to server'});
 });
 
